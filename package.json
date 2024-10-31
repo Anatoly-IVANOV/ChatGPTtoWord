@@ -1,0 +1,19 @@
+{
+  "name": "ai_chatgpt_to_word",
+  "version": "1.0.0",
+  "description": "Automatically converts ChatGPT markdown to my (or your) own Word styles",
+  "author": "Anatoly IVANOV .com",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "false"
+  },
+  "repository": {
+    "type": "git",
+    "url": ".git"
+  },
+  "dependencies": {
+    "clipboardy": "^4.0.0"
+  }
+}
