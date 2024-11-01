@@ -62,8 +62,8 @@ Install the **clipboardy** package to enable automatic clipboard reading and wri
 npm install clipboardy
 ```
 
-[!NOTE]
-If `Node.js` and `npm` aren’t your area of expertise but you’d like the functionality, get in touch and I’ll think of an automated installer.
+> [!NOTE]
+> If `Node.js` and `npm` aren’t your area of expertise but you’d like the functionality, get in touch and I’ll think of an automated installer.
 
 ### File Overview
 
