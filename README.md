@@ -120,7 +120,7 @@ To speed up the workflow, add a shortcut to run this script directly from the te
 
 ### Enable Debugging
 
-Set `bool_Debug` to `true` in `[index.js](index.js)` to log both the original Markdown and the RTF output to the console before it updates your clipboard.
+Set `bool_Debug` to `true` in [index.js](index.js) to log both the original Markdown and the RTF output to the console before it updates your clipboard. Observe how Markdown converts to RTF.
 
 ### Customize Colors and Fonts
 
