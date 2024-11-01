@@ -1,6 +1,6 @@
 # ChatGPTtoWord
 
-Convert your ChatGPT conversations to your own pre-defined Word styles with style, precision and automation. Minimum `Direct Formatting` in Word, maximum Swiss order and tidinesses (my roots 🙃🇨🇭). Slice the **Bold:** explanations of ChatGPT into Heading 3 + bullet points.
+Convert your ChatGPT conversations to your own pre-defined Word styles with style, precision and automation. Minimum `Direct Formatting` in Word, maximum order and tidiness (my🇨🇭roots). Slice the “**• Bold:** Explanations” of ChatGPT into an easier to read and outline “Heading 3 + bullet point” form.
 
 ## Before and After Illustration
 
@@ -63,7 +63,7 @@ npm install clipboardy
 ```
 
 > [!NOTE]
-> If `Node.js` and `npm` aren’t your area of expertise but you’d like the functionality, get in touch and I’ll think of an automated installer.
+> If `Node.js` and `npm` aren’t your area of expertise, but you’d like the functionality, get in touch, and I’ll think of an automated installer.
 
 ### File Overview
 
