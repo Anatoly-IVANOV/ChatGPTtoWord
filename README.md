@@ -76,9 +76,11 @@ This script maps specific Markdown elements to pre-set Word styles. To get optim
 | Bullets          | `Bullets level 1`    | Basic bullet points               |
 | Sub-Bullets      | `Bullets level 2`    | Secondary bullet points           |
 
-### 2. Adjust `RTF_STYLESHEET` in `index.js` if needed
+### 2. Or adjust `RTF_STYLESHEET` in `index.js` if needed
 
-The `RTF_STYLESHEET` section defines which Word styles the script will map to. If you use different style names, change them here.
+The `RTF_STYLESHEET` section of [index.js](index.js) defines which Word styles the script will map to. If you use different style names, change them here. You might want to read [docs/RTF_basics.md](docs/RTF_basics.md) for fancier customization. The idea remains the same: OpenAI outputs rather peculiar Markdown, you get to match them to your preferred Word Styles (ideally in a template).
+
+The sky is the limit. Make it beautiful and easy to read for you.
 
 ## Usage
 
