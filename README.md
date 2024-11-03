@@ -22,11 +22,11 @@ Convert your ChatGPT conversations to your own pre-defined Word styles with styl
 
 **ChatGPTtoWord** (also known as `ChatGPTtoRTF` to the connoisseurs) is a Node.js JavaScript single-file utility that grabs the ChatGPT Markdown output from your clipboard (when you press OpenAI’s `Copy` button), converts it to the RTF format, and auto-matches it to your predefined Word styles (md to Word mapping which you can customize).
 
-I also split:
+I also split “Prefixed With Bold:” bullet points that ChatGPT likes to create, such as:
 
-- **The Ultimate Knowledge**: is never final, but undergoing epistemic inquiry
+- **The Ultimate Knowledge**: is never final, but undergoing epistemic inquiry…
 
-bullet points that ChatGPT likes to create into separate `H3` and `bullet points`. Easier to read and ready for the automatic multilevel TOC at the top of your Word document as well.
+into separate `H3` and `bullet points`. Easier to read and ready for the automatic multilevel TOC at the top of your Word document as well.
 
 The script also supports **bold** highlights, header hierarchy (up to 6 levels deep, but I haven’t seen ChatGPT dive lower than `H3`), inline `code`…
 
@@ -48,6 +48,9 @@ A bit of aesthetics for anyone who cares about visual structure, legibility, des
 
 ## Installation
 
+> [!NOTE]
+> If `Node.js` and `npm` aren’t your area of expertise, but you’d like the functionality, get in touch, and I’ll think of an automated installer.
+
 Download the script (it’s just 1 [JS logic file](index.js) and 1 [package meta](package.json) JSON file) or clone this repo and navigate to the directory:
 
 ```bash
@@ -63,13 +66,13 @@ npm install clipboardy
 ```
 
 > [!NOTE]
-> If `Node.js` and `npm` aren’t your area of expertise, but you’d like the functionality, get in touch, and I’ll think of an automated installer.
+> I prefer to use a global `-g` install of `npm` libraries into my `/usr/local/lib/node_modules` and add an alias to it instead, so that all projects are automatically up-to-date. I do test before upgrading. Much more common practice is to compartmentalize `npm` on a per-project basis. Choose whichever you prefer.
 
 ### File Overview
 
 - **[index.js](index.js)** – the main script to convert Markdown to RTF and update clipboard content
 - **[package.json](package.json)** – dependencies and basic info about this package
-- **[docs/RTF_basics.md](docs/RTF_basics.md)** – a crash course on the arcanities of RTF (if you want to tinker)
+- **[docs/RTF_basics.md](docs/RTF_basics.md)** – an intro course of RTF _arcana_ (if you want to tinker)
 
 ## Setup
 
