@@ -1,16 +1,22 @@
 /*******************************************************************************
  **
  **  ANATOLY IVANOV / DESIGN
- **
  **  https://anatolyivanov.com/
  **
- **  Copyright (c) Anatoly IVANOV .com, all rights reserved - subject to and
- **  governed by French and international intellectual property law
+ **  Copyright © Anatoly IVANOV .com, all rights reserved.
+ **  Licensed under the GNU General Public License v3.0.
+ **
+ **  Subject to and governed by the Berne Convention and French intellectual
+ **  property law. For a primer on both, read:
+ **  https://anatolyivanov.com/methods/legal/usage_rights_primer/
+ **
+ **  For full terms of the GPL-3.0 license, see the LICENSE file or:
+ **  https://www.gnu.org/licenses/gpl-3.0.en.html
  **
  **
  **  RTF DOCUMENTATION:   docs/RTF_basics.md
  **
- *******************************************************************************/
+ ******************************************************************************/
 
 
 
@@ -162,11 +168,24 @@ async function catch_message_print_exit ( obj_Error = {}, str_ErrorMessage = '',
  */
 function RTF_special_chars_escape ( str_Text ) {
   return str_Text
-    .replace( /\\/g, '\\\\' ) // Backslash
-    .replace( /{/g, '\\{' ) // Left brace
-    .replace( /}/g, '\\}' ) // Right brace
-    .replace( /[\u0080-\uFFFF]/g, ( match ) => {
-      return `\\u${match.charCodeAt(0)}?`; // Unicode characters
+    .replace( /\\/g, '\\\\' ) // Escape backslash
+    .replace( /{/g, '\\{' ) // Escape left brace
+    .replace( /}/g, '\\}' ) // Escape right brace
+    .replace( /[\u0080-\uFFFF]/gu, ( match ) => {
+      const codePoint = match.codePointAt( 0 );
+
+      // Skip characters in the Private Use Area (PUA)
+      if (
+        ( codePoint >= 0xE000 && codePoint <= 0xF8FF ) || // BMP PUA
+        ( codePoint >= 0xF0000 && codePoint <= 0xFFFFD ) || // Plane 15 PUA
+        ( codePoint >= 0x100000 && codePoint <= 0x10FFFD ) // Plane 16 PUA
+      ) {
+        return ''; // Remove the character
+      }
+
+      // Adjust code point for signed 16-bit integer
+      const N = codePoint <= 32767 ? codePoint : codePoint - 65536;
+      return `\\u${N}?`;
     } );
 }
 
@@ -224,10 +243,11 @@ function replace_inline_formatting ( str_Text, bool_IsHeading = false ) {
   if ( !bool_IsHeading ) {
 
     str_Text = str_Text.replace( /\*\*(.+?)\*\*/g, ( match, p1 ) => {
-      // Replace bold markers with color and typography
+      // Replace bold markers with color and typography, but first
+      // convert to Sentence case (because I use EN, FR & RU conventions)
       // NB: trailing space required for correct Word import
-      // (otherwise the control word is ignored -- reason unknown)
-      return `\\cf1\\f1\\b1 ${p1}\\b0\\f0\\cf0 `;
+      //     (otherwise the control word is ignored -- reason unknown)
+      return `\\cf1\\f1\\b1 ${title_case_to_sentence_case_conv(p1)}\\b0\\f0\\cf0 `;
     } );
 
   }
@@ -238,7 +258,7 @@ function replace_inline_formatting ( str_Text, bool_IsHeading = false ) {
     // (Word styles already define the proper font weight)
     str_Text = str_Text.replace( /\*\*(.+?)\*\*/g, "$1" );
 
-    // In all cases, convert to Sentence case (because I use EN + FR + RU)
+    // In all cases, convert to Sentence case (because I use EN, FR & RU conventions)
     str_Text = title_case_to_sentence_case_conv( str_Text );
 
     return str_Text;
@@ -250,7 +270,7 @@ function replace_inline_formatting ( str_Text, bool_IsHeading = false ) {
 
     // If matched, apply RTF monospaced color and font, then revert to defaults
     // NB: trailing space required for correct Word import
-    // (otherwise the control word is ignored -- reason unknown)
+    //     (otherwise the control word is ignored -- reason unknown)
     return `\\cf2\\f2 ${p1}\\f0\\cf0 `;
   } );
 
@@ -259,7 +279,7 @@ function replace_inline_formatting ( str_Text, bool_IsHeading = false ) {
 
     // If matched, apply RTF italics, then revert to defaults
     // NB: trailing space required for correct Word import
-    // (otherwise the control word is ignored -- reason unknown)
+    //     (otherwise the control word is ignored -- reason unknown)
     return `\\i ${p1}\\i0 `;
   } );
 
@@ -350,6 +370,34 @@ function transform_markdown_to_rtf ( markdown ) {
       }
     }
 
+
+    /* --------------------------------------------
+     * Check for bold-only headings
+     * Example: **4. Some text**
+     * -------------------------------------------- */
+    if ( !bool_FormattingApplied ) {
+
+      // Looking for bold-only heading pattern
+      const arr_RegExMatch_BoldOnlyHeading = str_Line.match( /^\*\*(\d+\.\s*)?(.+?)\*\*$/ );
+
+      // OK, we have a match
+      if ( arr_RegExMatch_BoldOnlyHeading ) {
+
+        // Extract content without the number
+        let str_HeadingText = arr_RegExMatch_BoldOnlyHeading[ 2 ].trim();
+
+        // Remove bold markers in heading (bool_IsHeading = true)
+        str_HeadingText = replace_inline_formatting( str_HeadingText, true );
+
+        // Format as Heading 2 (\s2)
+        str_RTFLine += `\\s2 ${str_HeadingText}\\par \n`;
+
+        // Set the flag as formatting applied
+        bool_FormattingApplied = true;
+      }
+    }
+
+
     /* --------------------------------------------
      * Check for list items with bold text and colon
      * Example: - **Some Text**: description
@@ -383,6 +431,7 @@ function transform_markdown_to_rtf ( markdown ) {
       }
     }
 
+
     /* --------------------------------------------
      * Check for list items
      * -------------------------------------------- */
@@ -412,6 +461,7 @@ function transform_markdown_to_rtf ( markdown ) {
       }
     }
 
+
     /* --------------------------------------------
      * Regular paragraph
      * -------------------------------------------- */
@@ -425,6 +475,7 @@ function transform_markdown_to_rtf ( markdown ) {
     // Add the converted RTF line to... the RTF
     str_RTFcontent += str_RTFLine + '\n';
   }
+
 
   // Close the RTF document
   str_RTFcontent += '}';
